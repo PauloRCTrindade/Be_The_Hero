@@ -23,7 +23,8 @@ routes.post('/ongs', async (req,res) =>{
     email,
     city,
     whatsapp,
-    uf
+    uf,
+    cep
   })
   return res.json({id});
 
