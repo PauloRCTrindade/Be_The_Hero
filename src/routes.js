@@ -1,34 +1,27 @@
-const express = require('express');
 const crypto = require('crypto');
+const express = require('express');
 
-const connection = require('./database/connection');
-
+const OngController = require('./controllers/OngController');
+const IncidentController = require('./controllers/IncidentController');
+const ProfileController = require('./controllers/ProfileController');
+const SessionController = require('./controllers/SessionController');
 
 const routes = express.Router();
 
-routes.get('/ongs', async (req,res)=>{
-  const ongs = await connection('ongs').select('*');
+//===== ROTA DE LOGIN =====//
+routes.post('/sessions',SessionController.create)
 
-  return res.json(ongs);
-})
+//===== ROTA DE PERFIL =====//
+routes.get('/profile',ProfileController.index);
 
-routes.post('/ongs', async (req,res) =>{
-  const { name, email, city,whatsapp,uf, } = req.body;
+//===== ROTAS DAS ONGS =====//
+routes.get('/ongs',OngController.index);
+routes.post('/ongs',OngController.create);
 
-  const id = crypto.randomBytes(4).toString('HEX');
-
-  await connection('ongs').insert({
-    id,
-    name,
-    email,
-    city,
-    whatsapp,
-    uf,
-    cep
-  })
-  return res.json({id});
-
-})
+//===== ROTAS DOS CASOS =====//
+routes.get('/incidents',IncidentController.index);
+routes.post('/incidents',IncidentController.create);
+routes.delete('/incidents/:id', IncidentController.delete);
 
 
 module.exports = routes;
